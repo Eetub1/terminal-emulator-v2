@@ -1,0 +1,69 @@
+body {
+    background-color: black;
+    color: var(--primary-text-color);
+    font-family: monospace;
+}
+
+p {
+    margin: 0;
+}
+
+:root {
+    --primary-text-color: #00ff00;
+}
+
+#root {
+    height: 100vh;
+    display: flex;
+}
+
+.hidden {
+    display: none;
+}
+
+.prompt {
+    display: inline;
+}
+
+.promptInput {
+    display: inline;
+    background: transparent;
+    border: none;
+    color: var(--primary-text-color);
+    font-family: monospace;
+    font-size: 1em;
+    outline: none;
+}
+.cursor {
+    background-color: var(--primary-text-color);
+}
+
+
+/*Editor styles*/
+
+#editorView {
+    height: 98vh;
+}
+
+.editorViewVisible {
+    display: flex;
+    flex-direction: column;
+}
+
+.editorRowNumberContainer {
+    display: inline-block;
+    width: 2.5rem;
+    text-align: right;
+    color: #666;
+    user-select: none;
+}
+
+#editorCommandSection {
+    margin-top: auto;
+    border: 1px solid white;
+}
+
+#editorSessionInfoSection {
+    display: flex;
+    flex-direction: column;
+}

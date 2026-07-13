@@ -6,7 +6,18 @@
         <title>terminal-emulator-v2</title>
     </head>
     <body>
-        <div id="app"></div>
+        <div id="app">
+            <div id="terminalView">
+                <div id="history"></div>
+                <div id="terminal"></div>
+            </div>
+
+            <div id="editorView" class="hidden">
+                <div id="editorTextSection"></div>
+                <div id="editorCommandSection"></div>
+                <div id="editorSessionInfoSection"></div>
+            </div>
+        </div>
         <script type="module" src="/src/main.ts"></script>
     </body>
 </html>

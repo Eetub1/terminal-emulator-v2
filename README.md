@@ -1,7 +1,6 @@
 ## Terminal emulator V2
 
-This is a unix based terminal emulator written in Typescript which contains only a frontend. Data is stored in localstorage (when I implement that feature). This is a second version of a project I made because the previous
-code was so garbage.
+This is a unix based terminal emulator written in Typescript which contains only a frontend. Data is stored in localstorage. This is a second version of a project I made because the code in the previous version was so garbage.
 
 ## Currently supported commands
 
