@@ -1,5 +1,5 @@
-import { PROMPT_SYMBOL } from "../../utils/symbols.js"
-import type { TerminalCharacter } from "../../types.js"
+import { PROMPT_SYMBOL } from "../../utils/symbols"
+import type { TerminalCharacter } from "../../types"
 
 /**
  * Renders a default prompt on screen
@@ -61,4 +61,7 @@ export const renderUserInputOnScreen = (characters: TerminalCharacter[]): void =
         cursor.textContent = PROMPT_SYMBOL
         promptInput.appendChild(cursor)
     }
+
+    // When the terminal input overflows, the view keeps scrolling so that recent input is visible
+    document.querySelector(".cursor")?.scrollIntoView({ block: "nearest", inline: "nearest" })
 }

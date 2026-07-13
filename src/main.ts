@@ -8,7 +8,7 @@ const terminalBuffer = new TerminalBuffer()
 const commandHandler = new CommandHandler(terminalBuffer)
 
 window.addEventListener("keydown", (event: KeyboardEvent) => {
-    if (event.key === "Tab") {
+    if (event.key === "Tab" || event.key === " ") {
         event.preventDefault() // We want to use tab for autocomplete
     }
 

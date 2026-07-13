@@ -1,4 +1,4 @@
-import { PROMPT_SYMBOL } from "../../utils/symbols.js"
+import { PROMPT_SYMBOL } from "../../utils/symbols"
 
 export class Output {
 

@@ -12,9 +12,18 @@ p {
     --primary-text-color: #00ff00;
 }
 
-#root {
+#app {
     height: 100vh;
     display: flex;
+}
+
+#terminal {
+    white-space: pre; /* with this, multiple consecutive characters containing a space dont collapse into one*/
+}
+
+#terminalView {
+    overflow-x: auto; /* makes the terminal input scroll horizontally when line overflows*/
+    scrollbar-width: none;
 }
 
 .hidden {
@@ -34,13 +43,14 @@ p {
     font-size: 1em;
     outline: none;
 }
+
 .cursor {
     background-color: var(--primary-text-color);
 }
 
 
 /*Editor styles*/
-
+/*
 #editorView {
     height: 98vh;
 }
@@ -67,3 +77,4 @@ p {
     display: flex;
     flex-direction: column;
 }
+*/

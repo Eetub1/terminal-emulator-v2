@@ -20,6 +20,7 @@ const handleTerminalKeyPress = (key: string, commandHandler: CommandHandler): vo
             buffer.moveCursorLeft()
             break
         case "ArrowUp":
+            // TODO previous command
             break
         case "Backspace":
             buffer.deleteCharacter()

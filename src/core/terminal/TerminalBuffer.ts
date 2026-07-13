@@ -118,8 +118,8 @@ export class TerminalBuffer {
     }
 
 
+    //Construct an array of objects of every single character in the buffer
     bufferToArray(): TerminalCharacter[] {
-        // currently this is linear time because we always construct the array from the ground up
         const charArray: TerminalCharacter[] = []
         let curr = this.first
         while (curr) {
@@ -133,6 +133,7 @@ export class TerminalBuffer {
     }
 
 
+    // Turn the contents of the buffer into a string
     bufferToString(): string {
         let userInput = ""
         let curr = this.first
@@ -144,6 +145,7 @@ export class TerminalBuffer {
     }
 
     
+    // Clear the contents of the buffer completely
     clearBuffer(): void {
         this.first = null
         this.last = null
