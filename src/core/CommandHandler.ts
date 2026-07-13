@@ -8,8 +8,10 @@ import { touchCommand } from "../commands/touch"
 import { lsCommand } from "../commands/ls"
 import { echoCommand } from "../commands/echo"
 import { manCommand } from "../commands/man"
+import { mkdirCommand } from "../commands/mkdir"
+import { pwdCommand } from "../commands/pwd"
 
-import type { Command, CommandResult } from "../types"
+import type { Command } from "../types"
 import type { ParsedCommand } from "../types"
 
 export class CommandHandler {
@@ -46,7 +48,7 @@ export class CommandHandler {
     executeCommand(command: ParsedCommand): void {
         const systemCommand: Command | undefined = this.commands.get(command.name)
 
-        let commandOutput: CommandResult = {lines: [], isError: false}
+        let commandOutput
         if (!systemCommand) {
             commandOutput = {lines: [`Couldn't find command ${command.name}`], isError: true}
         } else if (command.args.length < systemCommand.minArgs) {
@@ -77,5 +79,7 @@ export class CommandHandler {
         this.commands.set(lsCommand.name, lsCommand)
         this.commands.set(echoCommand.name, echoCommand)
         this.commands.set(manCommand.name, manCommand)
+        this.commands.set(mkdirCommand.name, mkdirCommand)
+        this.commands.set(pwdCommand.name, pwdCommand)
     }
 }

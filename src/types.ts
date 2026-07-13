@@ -1,5 +1,6 @@
 import { FileSystem } from "./core/FileSystem"
 import { CommandHandler } from "./core/CommandHandler"
+import { DirectoryNode } from "./core/FileSystem"
 
 export type CommandResult = {
     lines: string[]
@@ -9,6 +10,12 @@ export type CommandResult = {
 export type ParsedCommand = {
     name: string
     args: string[]
+}
+
+export type PathResult = {
+    exists: boolean
+    path: string
+    directory: DirectoryNode
 }
 
 export type Command = {

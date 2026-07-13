@@ -1,3 +1,5 @@
+import type { PathObject } from "../types"
+
 export class FileNode {
     
     public name: string
@@ -47,16 +49,27 @@ export class DirectoryNode {
     }
 
 
+    getFiles(): FileNode[] {
+        return this.files
+    }
+
+
+    createDirectory(name: string): boolean {
+        const exists = this.childDirectories.some(dir => dir.name === name)
+    
+        if (exists) return false
+        
+        const newDir = new DirectoryNode(this, name)
+        this.childDirectories.push(newDir)
+        return true
+    }
+
+
     createFile(filename: string): boolean {
         const doesExist = this.files.some(file => file.name === filename)
         if (doesExist) return false
         this.files.push(new FileNode(filename))
         return true
-    }
-
-
-    getFiles(): FileNode[] {
-        return this.files
     }
 }
 
@@ -79,6 +92,21 @@ export class FileSystem {
 
     getCurrentDirectoryName(): string {
         return this.currentDirectory.name
+    }
+
+
+    setCurrentDirectory(dir: DirectoryNode): void {
+        this.currentDirectory = dir
+    }
+
+
+    createDirectory(name: string): boolean {
+        return this.getCurrentDirectory().createDirectory(name)
+    }
+
+
+    validatePath(path: string): PathResult {
+        // TODO
     }
 
 
