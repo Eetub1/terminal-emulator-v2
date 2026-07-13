@@ -29,5 +29,5 @@ const handleTerminalKeyPress = (key: string, commandHandler: CommandHandler): vo
             if (key.length === 1) {buffer.addCharacter(key)}
             break
     }
-    renderUserInputOnScreen(buffer.bufferToArray())
+    renderUserInputOnScreen(buffer.getText(), buffer.getCursorIndex())
 }

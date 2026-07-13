@@ -1,5 +1,4 @@
 import { PROMPT_SYMBOL } from "../../utils/symbols"
-import type { TerminalCharacter } from "../../types"
 
 /**
  * Renders a default prompt on screen
@@ -37,25 +36,23 @@ export const renderDefaultPrompt = (): void => {
 /**
  * Handles drawing what ever the user types on screen. The drawing is based
  * on what the doubly linked list buffer contains
- * @param characters 
+ * @param text
  */
-export const renderUserInputOnScreen = (characters: TerminalCharacter[]): void => {
+export const renderUserInputOnScreen = (text: string, cursorIndex: number): void => {
     const promptInput = document.querySelector(".promptInput")!
     promptInput.textContent = ""
 
-    let isCursorTopOfText = false
-    for (const char of characters) {
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
         const span = document.createElement("span")
-        span.textContent = char.data
+        span.textContent = char
 
-        if (char.hasCursor) {
-            span.classList.add("cursor")
-            isCursorTopOfText = true
-        }
+        if (i === cursorIndex) {span.classList.add("cursor")}
         promptInput.appendChild(span)
     }
 
-    if (!isCursorTopOfText) {
+    // Check if the cursor is right after all of the text
+    if (cursorIndex === text.length) {
         const cursor = document.createElement("span")
         cursor.className = "cursor"
         cursor.textContent = PROMPT_SYMBOL
