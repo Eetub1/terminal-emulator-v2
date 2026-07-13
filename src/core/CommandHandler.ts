@@ -5,6 +5,7 @@ import { CommandParser } from "./CommandParser"
 import { clearPrompt } from "../ui/terminal/prompt"
 
 import { touchCommand } from "../commands/touch"
+import { lsCommand } from "../commands/ls"
 
 import type { Command, CommandResult } from "../types"
 import type { ParsedCommand } from "../types"
@@ -28,13 +29,17 @@ export class CommandHandler {
         this.setCommands()
     }
 
+
     handleCommand(input: string): void {
         const command: ParsedCommand = this.parser.parseCommand(input)
         if (command.name !== "") this.history.push(input)
 
-        this.outputHandler.appendCommandToHistory(input) // adds command to screen history
+        this.outputHandler.appendCommandToHistory(
+            "user@emulator:" + this.fileSystem.getCurrentDirectoryName() + "$", 
+            input) // adds command to screen history
         this.executeCommand(command)
     }
+
 
     executeCommand(command: ParsedCommand): void {
         const systemCommand: Command | undefined = this.commands.get(command.name)
@@ -49,15 +54,19 @@ export class CommandHandler {
         } else {
             commandOutput = systemCommand.execute(command.args, this.fileSystem, this)
         }
+        
         this.outputHandler.appendCommandOutputToHistory(commandOutput)
         clearPrompt()
     }
+
 
     getTerminalBuffer(): TerminalBuffer {
         return this.terminalBuffer
     }
 
+
     setCommands(): void {
         this.commands.set(touchCommand.name, touchCommand)
+        this.commands.set(lsCommand.name, lsCommand)
     }
 }

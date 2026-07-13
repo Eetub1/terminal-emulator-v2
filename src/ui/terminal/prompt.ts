@@ -77,6 +77,6 @@ export const clearPrompt = (): void => {
 }
 
 
-export const getCurrentPromptDirectory = (): string => {
+/*export const getCurrentPromptDirectory = (): string => {
     return document.querySelector(".prompt")!.textContent
-}
+}*/
