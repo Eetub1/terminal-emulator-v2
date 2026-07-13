@@ -14,8 +14,7 @@ export type ParsedCommand = {
 
 export type PathResult = {
     exists: boolean
-    path: string
-    directory: DirectoryNode
+    directory: DirectoryNode | null
 }
 
 export type Command = {

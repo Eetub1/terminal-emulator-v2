@@ -13,7 +13,7 @@ export const renderDefaultPrompt = (): void => {
     editorViewContainer.classList.add("hidden")
     editorViewContainer.classList.remove("editorViewVisible")
 
-    // Build the prompt from scratch
+    // Build the whole prompt from scratch
     const terminalContainer = document.getElementById("terminal") as HTMLElement
     terminalContainer.textContent = ""
 
@@ -65,7 +65,7 @@ export const renderUserInputOnScreen = (text: string, cursorIndex: number): void
 
 
 /**
- * Clears the prompt of user input
+ * Clears the prompt of user input. Also updates the path 
  */
 export const clearPrompt = (): void => {
     const promptInput = document.querySelector(".promptInput")!
@@ -77,6 +77,6 @@ export const clearPrompt = (): void => {
 }
 
 
-/*export const getCurrentPromptDirectory = (): string => {
-    return document.querySelector(".prompt")!.textContent
-}*/
+export const renderPromptPath = (curPath: string): void => {
+    document.querySelector(".prompt")!.textContent = `user@emulator:${curPath}$ `
+}

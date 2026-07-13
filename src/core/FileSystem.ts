@@ -1,4 +1,4 @@
-import type { PathObject } from "../types"
+import type { PathResult } from "../types"
 
 export class FileNode {
     
@@ -15,14 +15,14 @@ export class DirectoryNode {
     private childDirectories: DirectoryNode[]
     private files: FileNode[]
     public name: string
-    private path: string
+    // private path: string
     
     constructor(parent: DirectoryNode | null, name: string) {
         this.parent = parent
         this.childDirectories = []
         this.files = []
         this.name = name
-        this.path = parent ? `${parent.path}/${name}` : "~"
+        // this.path = parent ? `${parent.path}/${name}` : "~"
     }
     
 
@@ -45,12 +45,18 @@ export class DirectoryNode {
 
 
     getPath(): string {
-        return this.path
+        return this.parent ? `${this.parent.getPath()}/${this.name}` : "~"
     }
 
 
     getFiles(): FileNode[] {
         return this.files
+    }
+
+
+    findChildDirectory(name: string): DirectoryNode | undefined {
+        const result = this.childDirectories.find(dir => dir.name === name)
+        return result
     }
 
 
@@ -78,15 +84,22 @@ export class FileSystem {
 
     private root: DirectoryNode
     private currentDirectory: DirectoryNode
+    // private currentPath: string
 
     constructor() {
         this.root = new DirectoryNode(null, "~")
         this.currentDirectory = this.root
+        // this.currentPath = ""
     }
 
 
     getCurrentDirectory(): DirectoryNode {
         return this.currentDirectory
+    }
+
+
+    getPath(): string {
+        return this.currentDirectory.getPath()
     }
 
 
@@ -105,8 +118,29 @@ export class FileSystem {
     }
 
 
+    /**
+     * Check that the given path is valid and return the directory that is at the end of the
+     * path if valid
+     * @param path 
+     */
     validatePath(path: string): PathResult {
-        // TODO
+        // if path starts with / then the path is absolute so we start at root
+        let current: DirectoryNode = path.startsWith("/") ? this.root : this.currentDirectory
+
+        const parts = path.split("/").filter(p => p !== "") // filter empty strings
+        for (const part of parts) {
+            if (part === ".") continue
+            if (part === "..") {
+                if (current.parent) current = current.parent // move one back if able
+                continue
+            }
+
+            // check if part is a child directory of current directory
+            const child = current.findChildDirectory(part)
+            if (!child) return {exists: false, directory: null}
+            current = child
+        }
+        return {exists: true, directory: current}
     }
 
 

@@ -13,7 +13,7 @@ export const cdCommand: Command = {
             return {lines: [`Couldn't find directory: ${args[0]}`], isError: true}
         }
 
-        fileSystem.setCurrentDirectory(result.directory)
+        fileSystem.setCurrentDirectory(result.directory!)
         return {lines: []}
     }
 }

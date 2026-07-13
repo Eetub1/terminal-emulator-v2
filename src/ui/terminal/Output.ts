@@ -17,7 +17,7 @@ export class Output {
     appendCommandToHistory(promptText: string, commandInput: string): void {
         const historyContainer = document.getElementById("history")!
 
-        let wholeTerminalText = promptText + " " + commandInput
+        const wholeTerminalText = promptText + " " + commandInput
         this.history.push(wholeTerminalText)
 
         const p = document.createElement("p")

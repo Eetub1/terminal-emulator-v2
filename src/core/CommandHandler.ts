@@ -2,7 +2,7 @@ import { TerminalBuffer } from "./terminal/TerminalBuffer"
 import { FileSystem } from "./FileSystem"
 import { Output } from "../ui/terminal/Output"
 import { CommandParser } from "./CommandParser"
-import { clearPrompt } from "../ui/terminal/prompt"
+import { renderUserInputOnScreen, renderPromptPath } from "../ui/terminal/prompt"
 
 import { touchCommand } from "../commands/touch"
 import { lsCommand } from "../commands/ls"
@@ -10,8 +10,9 @@ import { echoCommand } from "../commands/echo"
 import { manCommand } from "../commands/man"
 import { mkdirCommand } from "../commands/mkdir"
 import { pwdCommand } from "../commands/pwd"
+import { cdCommand } from "../commands/cd"
 
-import type { Command } from "../types"
+import type { Command, CommandResult } from "../types"
 import type { ParsedCommand } from "../types"
 
 export class CommandHandler {
@@ -38,9 +39,10 @@ export class CommandHandler {
         const command: ParsedCommand = this.parser.parseCommand(input)
         if (command.name !== "") this.history.push(input)
 
+        // adds command to screen history
         this.outputHandler.appendCommandToHistory(
-            "user@emulator:" + this.fileSystem.getCurrentDirectoryName() + "$", 
-            input) // adds command to screen history
+            "user@emulator:" + this.fileSystem.getPath() + "$", input)
+        
         this.executeCommand(command)
     }
 
@@ -48,7 +50,7 @@ export class CommandHandler {
     executeCommand(command: ParsedCommand): void {
         const systemCommand: Command | undefined = this.commands.get(command.name)
 
-        let commandOutput
+        let commandOutput: CommandResult
         if (!systemCommand) {
             commandOutput = {lines: [`Couldn't find command ${command.name}`], isError: true}
         } else if (command.args.length < systemCommand.minArgs) {
@@ -60,7 +62,9 @@ export class CommandHandler {
         }
 
         this.outputHandler.appendCommandOutputToHistory(commandOutput)
-        clearPrompt()
+        this.terminalBuffer.clearBuffer()
+        renderUserInputOnScreen(this.terminalBuffer.getText(), this.terminalBuffer.getCursorIndex())
+        renderPromptPath(this.fileSystem.getPath())
     }
 
 
@@ -81,5 +85,6 @@ export class CommandHandler {
         this.commands.set(manCommand.name, manCommand)
         this.commands.set(mkdirCommand.name, mkdirCommand)
         this.commands.set(pwdCommand.name, pwdCommand)
+        this.commands.set(cdCommand.name, cdCommand)
     }
 }
