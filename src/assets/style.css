@@ -48,6 +48,10 @@ p {
     background-color: var(--primary-text-color);
 }
 
+.error {
+    color: red;
+}
+
 
 /*Editor styles*/
 /*

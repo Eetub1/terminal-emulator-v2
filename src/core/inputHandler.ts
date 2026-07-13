@@ -13,6 +13,13 @@ const handleTerminalKeyPress = (key: string, commandHandler: CommandHandler): vo
     const buffer = commandHandler.getTerminalBuffer()
 
     switch (key) {
+        case "Enter":
+        {
+            const userInput = buffer.getText()
+            commandHandler.handleCommand(userInput)
+            buffer.clearBuffer()
+            break
+        }
         case "ArrowRight":
             buffer.moveCursorRight()
             break

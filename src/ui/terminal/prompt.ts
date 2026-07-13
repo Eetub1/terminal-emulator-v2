@@ -62,3 +62,21 @@ export const renderUserInputOnScreen = (text: string, cursorIndex: number): void
     // When the terminal input overflows, the view keeps scrolling so that recent input is visible
     document.querySelector(".cursor")?.scrollIntoView({ block: "nearest", inline: "nearest" })
 }
+
+
+/**
+ * Clears the prompt of user input
+ */
+export const clearPrompt = (): void => {
+    const promptInput = document.querySelector(".promptInput")!
+    const spans = promptInput.querySelectorAll("span")
+
+    for (let i = 0; i < spans.length - 1; i++) {
+        spans[i]?.remove()
+    }
+}
+
+
+export const getCurrentPromptDirectory = (): string => {
+    return document.querySelector(".prompt")!.textContent
+}
