@@ -6,6 +6,8 @@ import { clearPrompt } from "../ui/terminal/prompt"
 
 import { touchCommand } from "../commands/touch"
 import { lsCommand } from "../commands/ls"
+import { echoCommand } from "../commands/echo"
+import { manCommand } from "../commands/man"
 
 import type { Command, CommandResult } from "../types"
 import type { ParsedCommand } from "../types"
@@ -54,7 +56,7 @@ export class CommandHandler {
         } else {
             commandOutput = systemCommand.execute(command.args, this.fileSystem, this)
         }
-        
+
         this.outputHandler.appendCommandOutputToHistory(commandOutput)
         clearPrompt()
     }
@@ -65,8 +67,15 @@ export class CommandHandler {
     }
 
 
+    getCommands(): Map<string, Command>{
+        return this.commands
+    }
+
+
     setCommands(): void {
         this.commands.set(touchCommand.name, touchCommand)
         this.commands.set(lsCommand.name, lsCommand)
+        this.commands.set(echoCommand.name, echoCommand)
+        this.commands.set(manCommand.name, manCommand)
     }
 }
