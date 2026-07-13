@@ -1,5 +1,3 @@
-import { PROMPT_SYMBOL } from "../../utils/symbols"
-
 export class Output {
 
     private history: string[]
