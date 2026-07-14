@@ -11,6 +11,8 @@ import { manCommand } from "../commands/man"
 import { mkdirCommand } from "../commands/mkdir"
 import { pwdCommand } from "../commands/pwd"
 import { cdCommand } from "../commands/cd"
+import { rmCommand } from "../commands/rm"
+import { rmdirCommand } from "../commands/rmdir"
 
 import type { Command, CommandResult } from "../types"
 import type { ParsedCommand } from "../types"
@@ -54,9 +56,9 @@ export class CommandHandler {
         if (!systemCommand) {
             commandOutput = {lines: [`Couldn't find command ${command.name}`], isError: true}
         } else if (command.args.length < systemCommand.minArgs) {
-            commandOutput = {lines: [`Not enough arguments given: ${command.args.length}`], isError: true}
+            commandOutput = {lines: [`Not enough arguments given: ${command.args.length}, expected at least: ${systemCommand.minArgs}`], isError: true}
         } else if (systemCommand.maxArgs !== null && command.args.length > systemCommand.maxArgs) {
-            commandOutput = {lines: [`Too many arguments given: ${command.args.length}`], isError: true}
+            commandOutput = {lines: [`Too many arguments given: ${command.args.length}, expected at most: ${systemCommand.maxArgs}`], isError: true}
         } else {
             commandOutput = systemCommand.execute(command.args, this.fileSystem, this)
         }
@@ -86,5 +88,7 @@ export class CommandHandler {
         this.commands.set(mkdirCommand.name, mkdirCommand)
         this.commands.set(pwdCommand.name, pwdCommand)
         this.commands.set(cdCommand.name, cdCommand)
+        this.commands.set(rmCommand.name, rmCommand)
+        this.commands.set(rmdirCommand.name, rmdirCommand)
     }
 }

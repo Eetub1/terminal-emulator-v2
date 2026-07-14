@@ -1,4 +1,4 @@
-import type { PathResult } from "../types"
+import type { PathResult, DeleteDirectoryResultObject } from "../types"
 
 export class FileNode {
     
@@ -15,14 +15,12 @@ export class DirectoryNode {
     private childDirectories: DirectoryNode[]
     private files: FileNode[]
     public name: string
-    // private path: string
     
     constructor(parent: DirectoryNode | null, name: string) {
         this.parent = parent
         this.childDirectories = []
         this.files = []
         this.name = name
-        // this.path = parent ? `${parent.path}/${name}` : "~"
     }
     
 
@@ -77,6 +75,18 @@ export class DirectoryNode {
         this.files.push(new FileNode(filename))
         return true
     }
+
+
+    deleteFile(filename: string): boolean {
+        const initialLength = this.files.length
+        this.files = this.files.filter(file => file.name !== filename)
+        return this.files.length < initialLength
+    }
+
+
+    deleteDirectory(dirName: string): void {
+        this.childDirectories = this.childDirectories.filter(dir => dir.name !== dirName)
+    }
 }
 
 
@@ -84,12 +94,10 @@ export class FileSystem {
 
     private root: DirectoryNode
     private currentDirectory: DirectoryNode
-    // private currentPath: string
 
     constructor() {
         this.root = new DirectoryNode(null, "~")
         this.currentDirectory = this.root
-        // this.currentPath = ""
     }
 
 
@@ -144,8 +152,41 @@ export class FileSystem {
     }
 
 
+    deleteFile(filename: string): boolean {
+        return this.currentDirectory.deleteFile(filename)
+    }
+
+
     createFile(filename: string): boolean {
         return this.currentDirectory.createFile(filename)
+    }
+
+
+    deleteDirectory(dirName: string): DeleteDirectoryResultObject {
+        const resultObject: DeleteDirectoryResultObject = {
+            wasSuccess: false,
+            message: ""
+        }
+
+        const dirObject: DirectoryNode | undefined = this.currentDirectory.findChildDirectory(dirName)
+
+        if (!dirObject) {
+            resultObject.message = `Error: couldn't find directory ${dirName}`
+            return resultObject
+        }
+    
+        const containsChildDirs = dirObject.getChildDirectories().length !== 0
+        const containsFiles = dirObject.getFiles().length !== 0
+
+        if (containsChildDirs || containsFiles) {
+            resultObject.message = "Error: directory is not empty"
+            return resultObject
+        }
+
+        this.currentDirectory.deleteDirectory(dirName)
+
+        resultObject.wasSuccess = true
+        return resultObject
     }
 
 }

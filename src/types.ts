@@ -17,6 +17,11 @@ export type PathResult = {
     directory: DirectoryNode | null
 }
 
+export type DeleteDirectoryResultObject = {
+    wasSuccess: boolean
+    message: string
+}
+
 export type Command = {
     name: string
     description: string
