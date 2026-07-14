@@ -1,15 +1,22 @@
 import { CommandHandler } from "./CommandHandler"
 import { renderUserInputOnScreen } from "../ui/terminal/prompt"
 
+import { AppState } from "../types"
+
 
 export const handleUserInput = (event: KeyboardEvent, commandHandler: CommandHandler): void => {
     const key = event.key
+    const state = commandHandler.getApplicationState()
 
-    handleTerminalKeyPress(key, commandHandler) // Delegate key press to right handler
+    if (state === AppState.Terminal) {
+        handleTerminalInput(key, commandHandler)
+    } else {
+        // handleEditorInput(key, commandHandler)
+    }
 }
 
 
-const handleTerminalKeyPress = (key: string, commandHandler: CommandHandler): void => {
+const handleTerminalInput = (key: string, commandHandler: CommandHandler): void => {
     const buffer = commandHandler.getTerminalBuffer()
 
     switch (key) {

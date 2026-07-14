@@ -14,8 +14,8 @@ import { cdCommand } from "../commands/cd"
 import { rmCommand } from "../commands/rm"
 import { rmdirCommand } from "../commands/rmdir"
 
-import type { Command, CommandResult } from "../types"
-import type { ParsedCommand } from "../types"
+import type { Command, CommandResult, ParsedCommand } from "../types"
+import { AppState } from "../types"
 
 export class CommandHandler {
     
@@ -25,6 +25,7 @@ export class CommandHandler {
     private fileSystem: FileSystem
     private outputHandler: Output
     private parser: CommandParser
+    private applicationState: AppState
     
     constructor(terminalBuffer: TerminalBuffer, fileSystem: FileSystem, outputHandler: Output) {
         this.history = []
@@ -34,6 +35,7 @@ export class CommandHandler {
         this.outputHandler = outputHandler
         this.parser = new CommandParser()
         this.setCommands()
+        this.applicationState = AppState.Terminal
     }
 
 
@@ -77,6 +79,11 @@ export class CommandHandler {
 
     getCommands(): Map<string, Command>{
         return this.commands
+    }
+
+
+    getApplicationState(): AppState {
+        return this.applicationState
     }
 
 

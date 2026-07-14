@@ -2,6 +2,12 @@ import { FileSystem } from "./core/FileSystem"
 import { CommandHandler } from "./core/CommandHandler"
 import { DirectoryNode } from "./core/FileSystem"
 
+
+export enum AppState {
+    Terminal = "terminal",
+    Editor = "editor",
+}
+
 export type CommandResult = {
     lines: string[]
     isError?: boolean
