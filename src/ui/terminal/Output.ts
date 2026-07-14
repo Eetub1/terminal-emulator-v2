@@ -11,13 +11,19 @@ export class Output {
     /**
      * Appends the given command and the contents of the prompt directory to history and 
      * draws it on screen
-     * @param promptText   what is the current directory
+     * @param curPath   what is the current directory
      * @param commandInput string containing the command that was executed 
      */
-    appendCommandToHistory(promptText: string, commandInput: string): void {
+    appendCommandToHistory(curPath: string, commandInput: string): void {
+        if (curPath.length !== 1) curPath = curPath.slice(0, -1)
+        if (curPath === "/home/user") curPath = "~"
+
+        let fullPromptText = ""
+        if (curPath.length !== 0) fullPromptText = "user@emulator:" + curPath + "$ "
+
         const historyContainer = document.getElementById("history")!
 
-        const wholeTerminalText = promptText + " " + commandInput
+        const wholeTerminalText = fullPromptText + " " + commandInput
         this.history.push(wholeTerminalText)
 
         const p = document.createElement("p")
@@ -47,12 +53,12 @@ export class Output {
     /**
      * This function is called when the autocomplete find 2 or more matches.
      * Adds the current prompt state to history and outputs all possible matches.
-     * @param path            The path to current directory
+     * @param curPath         The path to current directory
      * @param possibleMatches Array of possible string matches
      * @param terminalInput   What user has typed into the terminal
      */
-    handleAutocompleteOutput(path: string, possibleMatches: string[], terminalInput: string): void {
-        this.appendCommandToHistory("user@emulator:" + path + "$ ", terminalInput)
+    handleAutocompleteOutput(curPath: string, possibleMatches: string[], terminalInput: string): void {
+        this.appendCommandToHistory(curPath, terminalInput)
         this.appendCommandToHistory("", possibleMatches.join(" "))
     }
 

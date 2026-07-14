@@ -39,13 +39,18 @@ export class DirectoryNode {
     }
 
 
+    addChildDirectory(dir: DirectoryNode): void {
+        this.childDirectories.push(dir)
+    }
+
+
     getName(): string {
         return this.name
     }
 
 
     getPath(): string {
-        return this.parent ? `${this.parent.getPath()}/${this.name}` : "~"
+        return this.parent ? `${this.parent.getPath()}${this.name}/` : "/"
     }
 
 
@@ -131,12 +136,30 @@ export class DirectoryNode {
 export class FileSystem {
 
     private root: DirectoryNode
-    private currentDirectory: DirectoryNode
+    private currentDirectory: DirectoryNode | null
 
     constructor() {
-        // If there is something in LS use that, else create a new root node
-        this.root = this.loadFromLocalStorage() ?? new DirectoryNode(null, "~")
-        this.currentDirectory = this.root
+        this.currentDirectory = null
+        // If there is something in LS use that, else create the default folder structure
+        this.root = this.loadFromLocalStorage() ?? this.createDefaultFolderStructure()
+    }
+
+
+    createDefaultFolderStructure(): DirectoryNode {
+        const realHome = new DirectoryNode(null, "/")
+
+        const defaultFiles = ["dev", "lib", "opt", "run", "usr", "etc", "media", "proc", "sys", "var", "home", "mnt", "root", "tmp"]
+        for (const fileName of defaultFiles) {
+            const newDir = new DirectoryNode(realHome, fileName)
+            realHome.addChildDirectory(newDir)
+
+            if (fileName === "home") {
+                const userDir = new DirectoryNode(newDir, "user")
+                newDir.addChildDirectory(userDir)
+                this.setCurrentDirectory(userDir)
+            }
+        }
+        return realHome
     }
 
 
@@ -151,15 +174,17 @@ export class FileSystem {
         try {
             console.log(raw)
             const parsed = JSON.parse(raw)
-            return DirectoryNode.deserialize(parsed, null)
+            const root = DirectoryNode.deserialize(parsed, null)
+            this.setCurrentDirectory(root)
+            return root
         } catch {
-            return null // something failed
+            return null
         }
     }
 
 
     getCurrentDirectory(): DirectoryNode {
-        return this.currentDirectory
+        return this.currentDirectory!
     }
 
 
@@ -169,12 +194,12 @@ export class FileSystem {
 
 
     getPath(): string {
-        return this.currentDirectory.getPath()
+        return this.currentDirectory!.getPath()
     }
 
 
     getCurrentDirectoryName(): string {
-        return this.currentDirectory.name
+        return this.currentDirectory!.name
     }
 
 
@@ -190,7 +215,7 @@ export class FileSystem {
      */
     validatePath(path: string): PathResult {
         // if path starts with / then the path is absolute so we start at root
-        let current: DirectoryNode = path.startsWith("/") ? this.root : this.currentDirectory
+        let current: DirectoryNode = path.startsWith("/") ? this.root : this.currentDirectory!
 
         const parts = path.split("/").filter(p => p !== "") // filter empty strings
         for (const part of parts) {
@@ -218,7 +243,7 @@ export class FileSystem {
 
 
     deleteFile(filename: string): boolean {
-        const result = this.currentDirectory.deleteFile(filename)
+        const result = this.currentDirectory!.deleteFile(filename)
         
         if (result) this.saveFileSystemToLocalStorage() // LOCALSTORAGE
         return result
@@ -226,7 +251,7 @@ export class FileSystem {
 
 
     createFile(filename: string): boolean {
-        const result = this.currentDirectory.createFile(filename)
+        const result = this.currentDirectory!.createFile(filename)
 
         if (result) this.saveFileSystemToLocalStorage() // LOCALSTORAGE
         return result
@@ -239,7 +264,7 @@ export class FileSystem {
             message: ""
         }
 
-        const dirObject: DirectoryNode | undefined = this.currentDirectory.findChildDirectory(dirName)
+        const dirObject: DirectoryNode | undefined = this.currentDirectory!.findChildDirectory(dirName)
 
         if (!dirObject) {
             resultObject.message = `Error: couldn't find directory ${dirName}`
@@ -254,7 +279,7 @@ export class FileSystem {
             return resultObject
         }
 
-        this.currentDirectory.deleteDirectory(dirName)
+        this.currentDirectory!.deleteDirectory(dirName)
         this.saveFileSystemToLocalStorage() // LOCALSTORAGE
 
         resultObject.wasSuccess = true

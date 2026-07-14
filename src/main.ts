@@ -1,5 +1,5 @@
 import "./assets/style.css"
-import { renderDefaultPrompt } from "./ui/terminal/prompt"
+import { renderDefaultTerminalScreen } from "./ui/terminal/prompt"
 import { TerminalBuffer } from "./core/terminal/TerminalBuffer"
 import { FileSystem } from "./core/FileSystem"
 import { Output } from "./ui/terminal/Output"
@@ -29,7 +29,7 @@ window.addEventListener("keydown", (event: KeyboardEvent) => {
 })
 
 const main = () => {
-    renderDefaultPrompt()
+    renderDefaultTerminalScreen(fileSystem.getPath())
 }
 
 main() // Start program

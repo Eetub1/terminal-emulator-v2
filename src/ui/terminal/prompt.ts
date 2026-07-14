@@ -3,7 +3,7 @@ import { PROMPT_SYMBOL } from "../../utils/symbols"
 /**
  * Renders a default prompt on screen
  */
-export const renderDefaultPrompt = (): void => {
+export const renderDefaultTerminalScreen = (path: string): void => {
     // Make sure terminal is visible
     const terminalViewContainer = document.getElementById("terminalView")!
     terminalViewContainer.style.display = "block"
@@ -13,23 +13,7 @@ export const renderDefaultPrompt = (): void => {
     editorViewContainer.classList.add("hidden")
     editorViewContainer.classList.remove("editorViewVisible")
 
-    // Build the whole prompt from scratch
-    const terminalContainer = document.getElementById("terminal") as HTMLElement
-    terminalContainer.textContent = ""
-
-    const p = document.createElement("p")
-    p.className = "prompt"
-    p.textContent = "user@emulator:~$ "
-    terminalContainer.appendChild(p)
-
-    const promptInput = document.createElement("div")
-    promptInput.className = "promptInput"
-    terminalContainer.appendChild(promptInput)
-
-    const cursor = document.createElement("span")
-    cursor.className = "cursor"
-    cursor.textContent = PROMPT_SYMBOL
-    promptInput.appendChild(cursor)
+    renderPromptPath(path)
 }
 
 
@@ -78,5 +62,8 @@ export const clearPrompt = (): void => {
 
 
 export const renderPromptPath = (curPath: string): void => {
+    if (curPath.length !== 1) curPath = curPath.slice(0, -1)
+    if (curPath === "/home/user") curPath = "~"
+    
     document.querySelector(".prompt")!.textContent = `user@emulator:${curPath}$ `
 }

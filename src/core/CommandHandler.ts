@@ -46,9 +46,7 @@ export class CommandHandler {
         if (command.name !== "") this.history.push(input)
 
         // adds command to screen history
-        this.outputHandler.appendCommandToHistory(
-            "user@emulator:" + this.fileSystem.getPath() + "$", input)
-        
+        this.outputHandler.appendCommandToHistory(this.fileSystem.getPath(), input)
         this.executeCommand(command)
     }
 
