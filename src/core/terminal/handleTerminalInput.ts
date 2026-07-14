@@ -1,25 +1,13 @@
-import { CommandHandler } from "./CommandHandler"
-import { renderUserInputOnScreen } from "../ui/terminal/prompt"
+import { renderUserInputOnScreen } from "../../ui/terminal/prompt"
+import { CommandHandler } from "../CommandHandler"
 
-import { AppState } from "../types"
-
-
-export const handleUserInput = (event: KeyboardEvent, commandHandler: CommandHandler): void => {
-    const key = event.key
-    const state = commandHandler.getApplicationState()
-
-    if (state === AppState.Terminal) {
-        handleTerminalInput(key, commandHandler)
-    } else {
-        // handleEditorInput(key, commandHandler)
-    }
-}
-
-
-const handleTerminalInput = (key: string, commandHandler: CommandHandler): void => {
+export const handleTerminalInput = (key: string, commandHandler: CommandHandler): void => {
     const buffer = commandHandler.getTerminalBuffer()
 
     switch (key) {
+        case "Tab":
+            commandHandler.handleInputAutocomplete()
+            break
         case "Enter":
         {
             const userInput = buffer.getText()
@@ -34,7 +22,7 @@ const handleTerminalInput = (key: string, commandHandler: CommandHandler): void 
             buffer.moveCursorLeft()
             break
         case "ArrowUp":
-            // TODO previous command
+            commandHandler.previousCommand()
             break
         case "Backspace":
             buffer.deleteCharacter()

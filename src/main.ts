@@ -1,10 +1,12 @@
 import "./assets/style.css"
 import { renderDefaultPrompt } from "./ui/terminal/prompt"
-import { handleUserInput } from "./core/inputHandler" 
 import { TerminalBuffer } from "./core/terminal/TerminalBuffer"
 import { FileSystem } from "./core/FileSystem"
 import { Output } from "./ui/terminal/Output"
 import { CommandHandler } from "./core/CommandHandler"
+import { handleTerminalInput } from "./core/terminal/handleTerminalInput"
+
+import { AppState } from "./types"
 
 
 const terminalBuffer = new TerminalBuffer()
@@ -16,7 +18,15 @@ window.addEventListener("keydown", (event: KeyboardEvent) => {
     if (event.key === "Tab" || event.key === " ") {
         event.preventDefault() // We want to use tab for autocomplete
     }
-    handleUserInput(event, commandHandler)
+    
+    const key = event.key
+    const state = commandHandler.getApplicationState()
+
+    if (state === AppState.Terminal) {
+        handleTerminalInput(key, commandHandler)
+    } else {
+        // handleEditorInput(key, commandHandler)
+    }
 })
 
 const main = () => {

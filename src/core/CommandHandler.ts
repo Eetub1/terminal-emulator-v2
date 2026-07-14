@@ -26,6 +26,7 @@ export class CommandHandler {
     private outputHandler: Output
     private parser: CommandParser
     private applicationState: AppState
+    private prevCommandIndex: number
     
     constructor(terminalBuffer: TerminalBuffer, fileSystem: FileSystem, outputHandler: Output) {
         this.history = []
@@ -36,6 +37,7 @@ export class CommandHandler {
         this.parser = new CommandParser()
         this.setCommands()
         this.applicationState = AppState.Terminal
+        this.prevCommandIndex = -1
     }
 
 
@@ -69,6 +71,55 @@ export class CommandHandler {
         this.terminalBuffer.clearBuffer()
         renderUserInputOnScreen(this.terminalBuffer.getText(), this.terminalBuffer.getCursorIndex())
         renderPromptPath(this.fileSystem.getPath())
+    }
+
+
+    previousCommand(): void {
+        if (this.history.length === 0) return
+
+        if (this.prevCommandIndex === -1) {
+            this.prevCommandIndex = this.history.length - 1
+        }
+
+        const prevCommand = this.history[this.prevCommandIndex]!
+        this.prevCommandIndex -= 1
+
+        this.terminalBuffer.clearBuffer()
+        for (const char of prevCommand) {
+            this.terminalBuffer.addCharacter(char)
+        }
+    }
+
+
+    /**
+     * Autocomplete is casesensitive
+     */
+    handleInputAutocomplete(): void {
+        const terminalInput: string = this.terminalBuffer.getText()
+        if (terminalInput.trim() === "") return
+
+        const currDirContents: string[] = this.fileSystem.getCurrentDirectory().getChildDirectoriesAndFiles()
+        const parts: string[] = terminalInput.split(" ")
+        const lastWord: string = parts[parts.length - 1]!
+        const possibleMatches: string[] = currDirContents.filter(name => name.startsWith(lastWord))
+        
+        if (possibleMatches.length === 1) {
+            const buffer = this.getTerminalBuffer()
+            buffer.clearBuffer()
+
+            parts.pop()
+            parts.push(possibleMatches[0]!)
+            
+            for (const char of parts.join(" ")) {
+                buffer.addCharacter(char)
+            }
+            return
+        }
+
+        if (possibleMatches.length > 1) {
+            this.outputHandler.handleAutocompleteOutput(this.fileSystem.getPath(), possibleMatches, terminalInput)
+        }
+        // else 0 possible matches, do nothing
     }
 
 
