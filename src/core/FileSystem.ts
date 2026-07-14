@@ -139,9 +139,19 @@ export class FileSystem {
     private currentDirectory: DirectoryNode | null
 
     constructor() {
-        this.currentDirectory = null
         // If there is something in LS use that, else create the default folder structure
         this.root = this.loadFromLocalStorage() ?? this.createDefaultFolderStructure()
+        this.currentDirectory = this.initializeCurrentDirectory()
+    }
+
+
+    // Try to set the currentDirectory to user directory. If it doesn't exist, set that to
+    // the root / directory
+    initializeCurrentDirectory(): DirectoryNode {
+        const userDir = this.root.findChildDirectory("home")?.findChildDirectory("user")
+        if (!userDir) return this.root
+        
+        return userDir
     }
 
 
@@ -156,7 +166,6 @@ export class FileSystem {
             if (fileName === "home") {
                 const userDir = new DirectoryNode(newDir, "user")
                 newDir.addChildDirectory(userDir)
-                this.setCurrentDirectory(userDir)
             }
         }
         return realHome
@@ -175,7 +184,6 @@ export class FileSystem {
             console.log(raw)
             const parsed = JSON.parse(raw)
             const root = DirectoryNode.deserialize(parsed, null)
-            this.setCurrentDirectory(root)
             return root
         } catch {
             return null
