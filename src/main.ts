@@ -8,7 +8,6 @@ import { handleTerminalInput } from "./core/terminal/handleTerminalInput"
 
 import { AppState } from "./types"
 
-
 const terminalBuffer = new TerminalBuffer()
 const fileSystem = new FileSystem()
 const outputHandler = new Output()
@@ -16,7 +15,7 @@ const commandHandler = new CommandHandler(terminalBuffer, fileSystem, outputHand
 
 window.addEventListener("keydown", (event: KeyboardEvent) => {
     if (event.key === "Tab" || event.key === " ") {
-        event.preventDefault() // We want to use tab for autocomplete
+        event.preventDefault() // We want to use tab and space
     }
     
     const key = event.key

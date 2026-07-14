@@ -1,6 +1,5 @@
-import { FileSystem } from "./core/FileSystem"
 import { CommandHandler } from "./core/CommandHandler"
-import { DirectoryNode } from "./core/FileSystem"
+import { DirectoryNode, FileSystem } from "./core/FileSystem"
 
 
 export enum AppState {
@@ -38,4 +37,16 @@ export type Command = {
         fileSystem: FileSystem,
         commandHandler?: CommandHandler
     ) => CommandResult
+}
+
+export type SerializedFileNode = {
+    name: string
+    contents: string
+}
+
+// Version of DirectoryNode object without the parent field, because that caused a circular structure
+export type SerializedDirectory = {
+    name: string
+    files: SerializedFileNode[]
+    childDirectories: SerializedDirectory[]
 }

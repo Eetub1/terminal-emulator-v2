@@ -1,11 +1,13 @@
-import type { PathResult, DeleteDirectoryResultObject } from "../types"
+import type { PathResult, DeleteDirectoryResultObject, SerializedDirectory } from "../types"
 
 export class FileNode {
     
     public name: string
+    public contents: string
 
-    constructor(name: string) {
+    constructor(name: string, contents: string="") {
         this.name = name
+        this.contents = contents
     }
 }
 
@@ -87,6 +89,42 @@ export class DirectoryNode {
     deleteDirectory(dirName: string): void {
         this.childDirectories = this.childDirectories.filter(dir => dir.name !== dirName)
     }
+
+
+    /**
+     * Converting the whole filesystem into a format that can be added to localstorage
+     * @returns the serialized rootnode of the filesystem
+     */
+    serialize(): SerializedDirectory {
+        return {
+            name: this.name,
+            files: this.files.map(fileNode => ({name: fileNode.name, contents: fileNode.contents})),
+            childDirectories: this.childDirectories.map(dir => dir.serialize())
+        }
+    }
+
+
+    /**
+     * Static method that deserializes a serialized directory taken from localstorage
+     * @param data   Current directorynode
+     * @param parent Parentnode of the current directorynode
+     * @returns      Deserialized rootnode of the filesystem
+     */
+    static deserialize(data: SerializedDirectory, parent: DirectoryNode | null): DirectoryNode {
+        const name = data.name
+        const files = data.files
+        
+        const newDir = new DirectoryNode(parent, name)
+        const newFiles = []
+        for (const file of files) {
+            const newFile = new FileNode(file.name, file.contents)
+            newFiles.push(newFile)
+        }
+
+        newDir.files = newFiles
+        newDir.childDirectories = data.childDirectories.map(dir => this.deserialize(dir, newDir))
+        return newDir
+    }
 }
 
 
@@ -96,13 +134,37 @@ export class FileSystem {
     private currentDirectory: DirectoryNode
 
     constructor() {
-        this.root = new DirectoryNode(null, "~")
+        // If there is something in LS use that, else create a new root node
+        this.root = this.loadFromLocalStorage() ?? new DirectoryNode(null, "~")
         this.currentDirectory = this.root
+    }
+
+
+    /**
+     * Tries to load filesystem from localstorage and deserialize it
+     * @returns 
+     */
+    loadFromLocalStorage(): DirectoryNode | null {
+        const raw = localStorage.getItem("fileSystem")
+        if (!raw) return null
+
+        try {
+            console.log(raw)
+            const parsed = JSON.parse(raw)
+            return DirectoryNode.deserialize(parsed, null)
+        } catch {
+            return null // something failed
+        }
     }
 
 
     getCurrentDirectory(): DirectoryNode {
         return this.currentDirectory
+    }
+
+
+    getRoot(): DirectoryNode {
+        return this.root
     }
 
 
@@ -118,11 +180,6 @@ export class FileSystem {
 
     setCurrentDirectory(dir: DirectoryNode): void {
         this.currentDirectory = dir
-    }
-
-
-    createDirectory(name: string): boolean {
-        return this.getCurrentDirectory().createDirectory(name)
     }
 
 
@@ -152,13 +209,27 @@ export class FileSystem {
     }
 
 
+    createDirectory(name: string): boolean {
+        const result = this.getCurrentDirectory().createDirectory(name)
+    
+        if (result) this.saveFileSystemToLocalStorage() // LOCALSTORAGE
+        return result
+    }
+
+
     deleteFile(filename: string): boolean {
-        return this.currentDirectory.deleteFile(filename)
+        const result = this.currentDirectory.deleteFile(filename)
+        
+        if (result) this.saveFileSystemToLocalStorage() // LOCALSTORAGE
+        return result
     }
 
 
     createFile(filename: string): boolean {
-        return this.currentDirectory.createFile(filename)
+        const result = this.currentDirectory.createFile(filename)
+
+        if (result) this.saveFileSystemToLocalStorage() // LOCALSTORAGE
+        return result
     }
 
 
@@ -184,9 +255,14 @@ export class FileSystem {
         }
 
         this.currentDirectory.deleteDirectory(dirName)
+        this.saveFileSystemToLocalStorage() // LOCALSTORAGE
 
         resultObject.wasSuccess = true
         return resultObject
     }
 
+
+    saveFileSystemToLocalStorage(): void {
+        localStorage.setItem("fileSystem", JSON.stringify(this.root.serialize()))
+    }
 }
