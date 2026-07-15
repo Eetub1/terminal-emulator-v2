@@ -1,7 +1,8 @@
 import { renderUserInputOnScreen } from "../../ui/terminal/prompt"
 import { CommandHandler } from "../CommandHandler"
 
-export const handleTerminalInput = (key: string, commandHandler: CommandHandler): void => {
+export const handleTerminalInput = (event: KeyboardEvent, commandHandler: CommandHandler): void => {
+    const key = event.key
     const buffer = commandHandler.getTerminalBuffer()
 
     switch (key) {

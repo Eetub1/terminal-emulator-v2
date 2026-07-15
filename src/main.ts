@@ -1,13 +1,18 @@
 import "./assets/style.css"
 import { renderDefaultTerminalScreen } from "./ui/terminal/prompt"
+
 import { TerminalBuffer } from "./core/terminal/TerminalBuffer"
 import { FileSystem } from "./core/FileSystem"
 import { Output } from "./ui/terminal/Output"
 import { CommandHandler } from "./core/CommandHandler"
+import { VimEditor } from "./core/editor/VimEditor"
+
 import { handleTerminalInput } from "./core/terminal/handleTerminalInput"
+import { handleEditorInput } from "./core/editor/handleEditorInput"
 
 import { AppState } from "./types"
 
+const vimEditor = new VimEditor()
 const terminalBuffer = new TerminalBuffer()
 const fileSystem = new FileSystem()
 const outputHandler = new Output()
@@ -18,13 +23,12 @@ window.addEventListener("keydown", (event: KeyboardEvent) => {
         event.preventDefault() // We want to use tab and space
     }
     
-    const key = event.key
     const state = commandHandler.getApplicationState()
 
     if (state === AppState.Terminal) {
-        handleTerminalInput(key, commandHandler)
+        handleTerminalInput(event, commandHandler)
     } else {
-        // handleEditorInput(key, commandHandler)
+        handleEditorInput(event, commandHandler)
     }
 })
 

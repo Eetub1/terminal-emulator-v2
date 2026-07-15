@@ -7,6 +7,12 @@ export enum AppState {
     Editor = "editor",
 }
 
+export enum VimMode {
+    Normal = "NORMAL",
+    Insert = "INSERT",
+    Command = "COMMAND"
+}
+
 export type CommandResult = {
     lines: string[]
     isError?: boolean

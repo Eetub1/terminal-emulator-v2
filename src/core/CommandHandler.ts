@@ -1,5 +1,5 @@
 import { TerminalBuffer } from "./terminal/TerminalBuffer"
-import { FileSystem } from "./FileSystem"
+import { FileNode, FileSystem } from "./FileSystem"
 import { Output } from "../ui/terminal/Output"
 import { CommandParser } from "./CommandParser"
 import { renderUserInputOnScreen, renderPromptPath } from "../ui/terminal/prompt"
@@ -13,6 +13,7 @@ import { pwdCommand } from "../commands/pwd"
 import { cdCommand } from "../commands/cd"
 import { rmCommand } from "../commands/rm"
 import { rmdirCommand } from "../commands/rmdir"
+import { vimCommand } from "../commands/vim"
 
 import type { Command, CommandResult, ParsedCommand } from "../types"
 import { AppState } from "../types"
@@ -136,6 +137,16 @@ export class CommandHandler {
     }
 
 
+    setApplicationState(state: AppState): void {
+        this.applicationState = state
+    }
+
+
+    setCurrentFile(file: FileNode): void {
+        this.fileSystem.setCurrentFile(file)
+    }
+
+
     setCommands(): void {
         this.commands.set(touchCommand.name, touchCommand)
         this.commands.set(lsCommand.name, lsCommand)
@@ -146,5 +157,6 @@ export class CommandHandler {
         this.commands.set(cdCommand.name, cdCommand)
         this.commands.set(rmCommand.name, rmCommand)
         this.commands.set(rmdirCommand.name, rmdirCommand)
+        this.commands.set(vimCommand.name, vimCommand)
     }
 }

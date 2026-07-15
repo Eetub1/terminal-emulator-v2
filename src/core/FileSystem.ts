@@ -9,6 +9,11 @@ export class FileNode {
         this.name = name
         this.contents = contents
     }
+
+
+    getContents(): string {
+        return this.contents
+    }
 }
 
 export class DirectoryNode {
@@ -84,6 +89,11 @@ export class DirectoryNode {
     }
 
 
+    findFile(filename: string): FileNode | undefined {
+        return this.files.find(file => file.name === filename)
+    }
+
+
     deleteFile(filename: string): boolean {
         const initialLength = this.files.length
         this.files = this.files.filter(file => file.name !== filename)
@@ -136,12 +146,14 @@ export class DirectoryNode {
 export class FileSystem {
 
     private root: DirectoryNode
-    private currentDirectory: DirectoryNode | null
+    private currentDirectory: DirectoryNode
+    private currentFile: FileNode | null
 
     constructor() {
         // If there is something in LS use that, else create the default folder structure
         this.root = this.loadFromLocalStorage() ?? this.createDefaultFolderStructure()
         this.currentDirectory = this.initializeCurrentDirectory()
+        this.currentFile = null
     }
 
 
@@ -263,6 +275,17 @@ export class FileSystem {
 
         if (result) this.saveFileSystemToLocalStorage() // LOCALSTORAGE
         return result
+    }
+
+
+    findFile(filename: string): FileNode | undefined {
+        return this.currentDirectory.findFile(filename)
+    }
+
+
+    // The file that is currently being handled
+    setCurrentFile(file: FileNode): void {
+        this.currentFile = file
     }
 
 
