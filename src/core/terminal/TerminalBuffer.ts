@@ -7,6 +7,13 @@ export class TerminalBuffer {
         this.cursorIndex++
     }
 
+    setBufferText(text: string): void {
+        this.clearBuffer()
+        for (const char of text) {
+            this.addCharacter(char)
+        }
+    }
+
     deleteCharacter(): void {
         if (this.cursorIndex === 0) return
         this.text = this.text.slice(0, this.cursorIndex - 1) + this.text.slice(this.cursorIndex)

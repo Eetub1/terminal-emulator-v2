@@ -11,7 +11,7 @@ import { App } from "./core/App"
 const fileSystem = new FileSystem()
 const terminalBuffer = new TerminalBuffer()
 //const documentBuffer = new DocumentBuffer()
-// const vimEditor = new VimEditor(documentBuffer) do this!
+// const vimEditor = new VimEditor(documentBuffer) TODO!
 const vimEditor = new VimEditor()
 const output = new Output()
 

@@ -25,7 +25,7 @@ export class CommandHandler {
     private fileSystem: FileSystem
     private outputHandler: Output
     private parser: CommandParser
-    private prevCommandIndex: number
+    private commandIndex: number
     
     constructor(terminalBuffer: TerminalBuffer, fileSystem: FileSystem, outputHandler: Output) {
         this.history = []
@@ -35,7 +35,7 @@ export class CommandHandler {
         this.outputHandler = outputHandler
         this.parser = new CommandParser()
         this.setCommands()
-        this.prevCommandIndex = -1
+        this.commandIndex = -1
     }
 
 
@@ -73,16 +73,23 @@ export class CommandHandler {
     previousCommand(): void {
         if (this.history.length === 0) return
 
-        if (this.prevCommandIndex === -1) {
-            this.prevCommandIndex = this.history.length - 1
+        if (this.commandIndex === -1) {
+            this.commandIndex = this.history.length - 1
+        } else if (this.commandIndex > 0) {
+            this.commandIndex -= 1
         }
+        // at 0 we stay on the oldest command
 
-        const prevCommand = this.history[this.prevCommandIndex]!
-        this.prevCommandIndex -= 1
+        this.terminalBuffer.setBufferText(this.history[this.commandIndex]!)
+    }
 
-        this.terminalBuffer.clearBuffer()
-        for (const char of prevCommand) {
-            this.terminalBuffer.addCharacter(char)
+
+    nextCommand(): void {
+        if (this.history.length === 0 || this.commandIndex === -1) return
+
+        if (this.commandIndex !== this.history.length - 1) {
+            this.commandIndex += 1
+            this.terminalBuffer.setBufferText(this.history[this.commandIndex]!)
         }
     }
 
