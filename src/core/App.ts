@@ -7,6 +7,8 @@ import { handleTerminalInput } from "./terminal/handleTerminalInput"
 import { handleEditorInput } from "./editor/handleEditorInput"
 import { renderDefaultTerminalScreen } from "../ui/terminal/prompt"
 
+import { FileNode } from "./FileSystem"
+
 import { AppState } from "../types"
 
 export class App {
@@ -18,7 +20,7 @@ export class App {
     private output: Output
 
     constructor(fileSystem: FileSystem, terminalBuffer: TerminalBuffer, vimEditor: VimEditor, output: Output,) {
-        this.commandHandler = new CommandHandler(terminalBuffer, fileSystem, output)
+        this.commandHandler = new CommandHandler(terminalBuffer, fileSystem, output, (file: FileNode) => this.openEditor(file))
         this.vimEditor = vimEditor
         this.fileSystem = fileSystem
         this.terminalBuffer = terminalBuffer
@@ -39,5 +41,9 @@ export class App {
         } else {
             handleEditorInput(event, this.vimEditor)
         }
+    }
+
+    openEditor(file: FileNode): void {
+
     }
 }

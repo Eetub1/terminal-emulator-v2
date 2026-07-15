@@ -19,6 +19,11 @@ const output = new Output()
 const app = new App(fileSystem, terminalBuffer, vimEditor, output)
 
 window.addEventListener("keydown", (event: KeyboardEvent) => {
+    const key = event.key
+    if (key === "Tab" || key === "ArrowDown" || key === "ArrowUp" || event.key === " ") {
+        event.preventDefault()
+    }
+
     app.handleKey(event)
 })
 

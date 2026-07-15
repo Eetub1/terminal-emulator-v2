@@ -1,5 +1,5 @@
 import { TerminalBuffer } from "./terminal/TerminalBuffer"
-import { FileNode, FileSystem } from "./FileSystem"
+import { FileSystem, FileNode } from "./FileSystem"
 import { Output } from "../ui/terminal/Output"
 import { CommandParser } from "./CommandParser"
 import { renderUserInputOnScreen, renderPromptPath } from "../ui/terminal/prompt"
@@ -26,8 +26,9 @@ export class CommandHandler {
     private outputHandler: Output
     private parser: CommandParser
     private commandIndex: number
+    private openEditor: (file: FileNode) => void
     
-    constructor(terminalBuffer: TerminalBuffer, fileSystem: FileSystem, outputHandler: Output) {
+    constructor(terminalBuffer: TerminalBuffer, fileSystem: FileSystem, outputHandler: Output, openEditor: (file: FileNode) => void) {
         this.history = []
         this.commands = new Map()
         this.terminalBuffer = terminalBuffer
@@ -36,6 +37,7 @@ export class CommandHandler {
         this.parser = new CommandParser()
         this.setCommands()
         this.commandIndex = -1
+        this.openEditor = openEditor
     }
 
 
@@ -60,7 +62,7 @@ export class CommandHandler {
         } else if (systemCommand.maxArgs !== null && command.args.length > systemCommand.maxArgs) {
             commandOutput = {lines: [`Too many arguments given: ${command.args.length}, expected at most: ${systemCommand.maxArgs}`], isError: true}
         } else {
-            commandOutput = systemCommand.execute(command.args, this.fileSystem, this)
+            commandOutput = systemCommand.execute(command.args, this.fileSystem, {openEditor: this.openEditor, findCommand: (name) => this.commands.get(name)})
         }
 
         this.outputHandler.appendCommandOutputToHistory(commandOutput)
@@ -133,11 +135,6 @@ export class CommandHandler {
 
     getCommands(): Map<string, Command>{
         return this.commands
-    }
-
-
-    setCurrentFile(file: FileNode): void {
-        this.fileSystem.setCurrentFile(file)
     }
 
 

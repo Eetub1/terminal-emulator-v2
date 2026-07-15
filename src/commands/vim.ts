@@ -1,8 +1,9 @@
-import { AppState, type Command, type CommandResult } from "../types"
-import { clearPrompt } from "../ui/terminal/prompt"
+import { type Command, type CommandResult } from "../types"
+import type { CommandContext } from "../types"
+import { AppState } from "../types"
+//import { clearPrompt } from "../ui/terminal/prompt"
 // import { renderDefaultVimView, renderEditorTextOnScreen } from "../ui/editor/vimUI"
 import { FileSystem } from "../core/FileSystem"
-import { CommandHandler } from "../core/CommandHandler"
 
 import { FileNode } from "../core/FileSystem"
 // import type { DocumentRow } from "../types"
@@ -12,15 +13,19 @@ export const vimCommand: Command = {
     description: "Open a file with Vim text editor",
     minArgs: 1,
     maxArgs: 1,
-    execute: (args: string[], fileSystem: FileSystem, commandHandler?: CommandHandler): CommandResult => {
+    execute: (args: string[], fileSystem: FileSystem, commandContext, CommandContext): CommandResult => {
         const filename = args[0]!
         const file: FileNode | undefined = fileSystem.findFile(filename)
 
         if (!file) return {lines: ["Couldn't find file " + filename], isError: true}
         
-        commandHandler!.setApplicationState(AppState.Editor)
-        commandHandler!.setCurrentFile(file)
-        clearPrompt()
+
+        // SOMEHOW NEED TO CHANGE THE APP STATE TO EDITOR MODE AND ALSO SET THE CURRENTLY
+        // OPEN FILE
+
+        //commandHandler!.setApplicationState(AppState.Editor)
+        //commandHandler!.setCurrentFile(file)
+        //clearPrompt()
 
         // const fileContents: DocumentRow[] = file.getContents()
         // const fileContents: string = file.getContents()

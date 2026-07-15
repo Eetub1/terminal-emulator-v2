@@ -3,11 +3,6 @@ import { CommandHandler } from "../CommandHandler"
 
 export const handleTerminalInput = (event: KeyboardEvent, commandHandler: CommandHandler): void => {
     const key = event.key
-
-    if (key === "Tab" || key === "ArrowDown" || key === "ArrowUp" || event.key === " ") {
-        event.preventDefault()
-    }
-
     const buffer = commandHandler.getTerminalBuffer()
 
     switch (key) {

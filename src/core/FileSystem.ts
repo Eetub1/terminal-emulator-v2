@@ -147,13 +147,11 @@ export class FileSystem {
 
     private root: DirectoryNode
     private currentDirectory: DirectoryNode
-    private currentFile: FileNode | null
 
     constructor() {
         // If there is something in LS use that, else create the default folder structure
         this.root = this.loadFromLocalStorage() ?? this.createDefaultFolderStructure()
         this.currentDirectory = this.initializeCurrentDirectory()
-        this.currentFile = null
     }
 
 
@@ -280,12 +278,6 @@ export class FileSystem {
 
     findFile(filename: string): FileNode | undefined {
         return this.currentDirectory.findFile(filename)
-    }
-
-
-    // The file that is currently being handled
-    setCurrentFile(file: FileNode): void {
-        this.currentFile = file
     }
 
 

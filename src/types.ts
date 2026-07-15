@@ -1,5 +1,4 @@
-import { CommandHandler } from "./core/CommandHandler"
-import { DirectoryNode, FileSystem } from "./core/FileSystem"
+import { DirectoryNode, FileSystem, FileNode } from "./core/FileSystem"
 
 
 export enum AppState {
@@ -33,6 +32,11 @@ export type DeleteDirectoryResultObject = {
     message: string
 }
 
+export type CommandContext = {
+    openEditor: (file: FileNode) => void
+    findCommand: (name: string) => Command | undefined
+}
+
 export type Command = {
     name: string
     description: string
@@ -41,7 +45,7 @@ export type Command = {
     execute: (
         args: string[], 
         fileSystem: FileSystem,
-        commandHandler?: CommandHandler
+        commandContext: CommandContext
     ) => CommandResult
 }
 
