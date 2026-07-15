@@ -16,7 +16,6 @@ import { rmdirCommand } from "../commands/rmdir"
 import { vimCommand } from "../commands/vim"
 
 import type { Command, CommandResult, ParsedCommand } from "../types"
-import { AppState } from "../types"
 
 export class CommandHandler {
     
@@ -26,7 +25,6 @@ export class CommandHandler {
     private fileSystem: FileSystem
     private outputHandler: Output
     private parser: CommandParser
-    private applicationState: AppState
     private prevCommandIndex: number
     
     constructor(terminalBuffer: TerminalBuffer, fileSystem: FileSystem, outputHandler: Output) {
@@ -37,7 +35,6 @@ export class CommandHandler {
         this.outputHandler = outputHandler
         this.parser = new CommandParser()
         this.setCommands()
-        this.applicationState = AppState.Terminal
         this.prevCommandIndex = -1
     }
 
@@ -129,16 +126,6 @@ export class CommandHandler {
 
     getCommands(): Map<string, Command>{
         return this.commands
-    }
-
-
-    getApplicationState(): AppState {
-        return this.applicationState
-    }
-
-
-    setApplicationState(state: AppState): void {
-        this.applicationState = state
     }
 
 

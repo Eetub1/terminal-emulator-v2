@@ -1,39 +1,25 @@
 import "./assets/style.css"
-import { renderDefaultTerminalScreen } from "./ui/terminal/prompt"
 
 import { TerminalBuffer } from "./core/terminal/TerminalBuffer"
+//import { DocumentBuffer } from "./core/editor/DocumentBuffer"
+import { VimEditor } from "./core/editor/VimEditor"
 import { FileSystem } from "./core/FileSystem"
 import { Output } from "./ui/terminal/Output"
-import { CommandHandler } from "./core/CommandHandler"
-import { VimEditor } from "./core/editor/VimEditor"
+import { App } from "./core/App"
 
-import { handleTerminalInput } from "./core/terminal/handleTerminalInput"
-import { handleEditorInput } from "./core/editor/handleEditorInput"
 
-import { AppState } from "./types"
-
-const vimEditor = new VimEditor()
-const terminalBuffer = new TerminalBuffer()
 const fileSystem = new FileSystem()
-const outputHandler = new Output()
-const commandHandler = new CommandHandler(terminalBuffer, fileSystem, outputHandler)
+const terminalBuffer = new TerminalBuffer()
+//const documentBuffer = new DocumentBuffer()
+// const vimEditor = new VimEditor(documentBuffer) do this!
+const vimEditor = new VimEditor()
+const output = new Output()
+
+
+const app = new App(fileSystem, terminalBuffer, vimEditor, output)
 
 window.addEventListener("keydown", (event: KeyboardEvent) => {
-    if (event.key === "Tab" || event.key === " ") {
-        event.preventDefault() // We want to use tab and space
-    }
-    
-    const state = commandHandler.getApplicationState()
-
-    if (state === AppState.Terminal) {
-        handleTerminalInput(event, commandHandler)
-    } else {
-        handleEditorInput(event, commandHandler)
-    }
+    app.handleKey(event)
 })
 
-const main = () => {
-    renderDefaultTerminalScreen(fileSystem.getPath())
-}
-
-main() // Start program
+app.start()
