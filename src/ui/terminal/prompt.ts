@@ -51,6 +51,8 @@ export const renderUserInputOnScreen = (text: string, cursorIndex: number): void
 /**
  * Clears the prompt of user input. Also updates the path 
  */
+/*
+Maybe rather just clear the buffer. Dont manually remove elements from UI
 export const clearPrompt = (): void => {
     const promptInput = document.querySelector(".promptInput")!
     const spans = promptInput.querySelectorAll("span")
@@ -58,7 +60,7 @@ export const clearPrompt = (): void => {
     for (let i = 0; i < spans.length - 1; i++) {
         spans[i]?.remove()
     }
-}
+}*/
 
 
 export const renderPromptPath = (curPath: string): void => {

@@ -1,18 +1,17 @@
 import "./assets/style.css"
 
 import { TerminalBuffer } from "./core/terminal/TerminalBuffer"
-//import { DocumentBuffer } from "./core/editor/DocumentBuffer"
+import { DocumentBuffer } from "./core/editor/DocumentBuffer"
 import { VimEditor } from "./core/editor/VimEditor"
 import { FileSystem } from "./core/FileSystem"
 import { Output } from "./ui/terminal/Output"
 import { App } from "./core/App"
 
 
+const documentBuffer = new DocumentBuffer() // tracks user input in editor
 const fileSystem = new FileSystem()
 const terminalBuffer = new TerminalBuffer()
-//const documentBuffer = new DocumentBuffer()
-// const vimEditor = new VimEditor(documentBuffer) TODO!
-const vimEditor = new VimEditor()
+const vimEditor = new VimEditor(documentBuffer)
 const output = new Output()
 
 

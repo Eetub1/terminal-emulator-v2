@@ -1,4 +1,5 @@
 import { DirectoryNode, FileSystem, FileNode } from "./core/FileSystem"
+import { RowGapBuffer } from "./core/editor/RowGapBuffer"
 
 
 export enum AppState {
@@ -10,6 +11,11 @@ export enum VimMode {
     Normal = "NORMAL",
     Insert = "INSERT",
     Command = "COMMAND"
+}
+
+export type DocumentRow = {
+    data: RowGapBuffer,
+    hasCursor: boolean
 }
 
 export type CommandResult = {

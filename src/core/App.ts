@@ -4,8 +4,9 @@ import { TerminalBuffer } from "./terminal/TerminalBuffer"
 import { FileSystem } from "./FileSystem"
 import { Output } from "../ui/terminal/Output"
 import { handleTerminalInput } from "./terminal/handleTerminalInput"
-import { handleEditorInput } from "./editor/handleEditorInput"
+
 import { renderDefaultTerminalScreen } from "../ui/terminal/prompt"
+
 
 import { FileNode } from "./FileSystem"
 
@@ -39,11 +40,12 @@ export class App {
         if (this.appState === AppState.Terminal) {
             handleTerminalInput(event, this.commandHandler)
         } else {
-            handleEditorInput(event, this.vimEditor)
+            this.vimEditor.handleEditorKeyPress(event)
         }
     }
 
     openEditor(file: FileNode): void {
-
+        this.appState = AppState.Editor
+        this.vimEditor.open(file)
     }
 }
