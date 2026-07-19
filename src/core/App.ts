@@ -20,16 +20,16 @@ export class App {
     private appState: AppState = AppState.Terminal
     private commandHandler: CommandHandler
     private fileSystem: FileSystem
-    private terminalBuffer: TerminalBuffer
+    //private terminalBuffer: TerminalBuffer
     private vimEditor: VimEditor
-    private output: Output
+    //private output: Output
 
     constructor(fileSystem: FileSystem, terminalBuffer: TerminalBuffer, vimEditor: VimEditor, output: Output,) {
         this.commandHandler = new CommandHandler(terminalBuffer, fileSystem, output, (file: FileNode) => this.openEditor(file))
         this.vimEditor = vimEditor
         this.fileSystem = fileSystem
-        this.terminalBuffer = terminalBuffer
-        this.output = output
+        //this.terminalBuffer = terminalBuffer
+        //this.output = output
     }
 
     start(): void {
