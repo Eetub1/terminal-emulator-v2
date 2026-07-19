@@ -1,3 +1,5 @@
+/*Represents a single row in a file*/
+
 import { RowGapBuffer } from "./RowGapBuffer.js"
 
 export class BufferNode {

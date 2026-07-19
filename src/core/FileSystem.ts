@@ -14,6 +14,10 @@ export class FileNode {
     getContents(): string {
         return this.contents
     }
+
+    setContents(contents: string): void {
+        this.contents = contents
+    }
 }
 
 export class DirectoryNode {

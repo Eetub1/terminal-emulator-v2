@@ -1,3 +1,4 @@
+/*Contains the data of a single BufferNode object*/
 export class RowGapBuffer {
 
     private buffer: string[]

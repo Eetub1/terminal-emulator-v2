@@ -7,14 +7,12 @@ import { FileSystem } from "./core/FileSystem"
 import { Output } from "./ui/terminal/Output"
 import { App } from "./core/App"
 
-
-const documentBuffer = new DocumentBuffer() // tracks user input in editor
+const documentBuffer = new DocumentBuffer()       // Contains the currently opened file
+const editorTerminalBuffer = new TerminalBuffer() // Vim editor terminal
 const fileSystem = new FileSystem()
-const terminalBuffer = new TerminalBuffer()
-const vimEditor = new VimEditor(documentBuffer)
+const terminalBuffer = new TerminalBuffer()       // Normal terminal
+const vimEditor = new VimEditor(documentBuffer, editorTerminalBuffer)
 const output = new Output()
-
-
 const app = new App(fileSystem, terminalBuffer, vimEditor, output)
 
 window.addEventListener("keydown", (event: KeyboardEvent) => {

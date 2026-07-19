@@ -1,3 +1,5 @@
+/*This file represents a whole textfile. Each buffernode is a row in the file*/
+
 import { RowGapBuffer } from "./RowGapBuffer.js"
 import { BufferNode } from "./BufferNode.js"
 import type { DocumentRow } from "../../types.js"
@@ -16,7 +18,7 @@ export class DocumentBuffer {
     }
 
 
-    addNewRow(initialContent: string = ""): void {
+    /*addNewRow(initialContent: string = ""): void {
         const newNode = new BufferNode(initialContent)
 
         if (!this.first) { // we are adding the first node of the list
@@ -31,32 +33,17 @@ export class DocumentBuffer {
                 this.last = newNode
                 this.cursor = newNode
             } else { // there are 2 cases, either we are on top of the first char or not
-                if (this.cursor === this.first) { // we are on the first character of the input
-                    const nextNode = this.cursor.next
-                    this.cursor.next = newNode
-                    newNode.prev = this.cursor
-
-                    if (nextNode === null) {
-                        this.last = newNode
-                    } else {
-                        newNode.next = nextNode
-                        nextNode.prev = newNode
-                    }
-                    this.cursor = newNode
-
-                } else { // we are not on the first char but on top of some other char
-                    const nextNode = this.cursor.next
-                    this.cursor.next = newNode
-                    newNode.prev = this.cursor
-                    
-                    if (nextNode === null) {
-                        this.last = newNode
-                    } else {
-                        newNode.next = nextNode
-                        nextNode.prev = newNode
-                    }
-                    this.cursor = newNode
+                const nextNode = this.cursor.next
+                this.cursor.next = newNode
+                newNode.prev = this.cursor
+                
+                if (nextNode === null) {
+                    this.last = newNode
+                } else {
+                    newNode.next = nextNode
+                    nextNode.prev = newNode
                 }
+                this.cursor = newNode
             }
         }
     }
@@ -83,6 +70,52 @@ export class DocumentBuffer {
         this.cursor = prevNode
         prevNode.next = nextNode
         nextNode.prev = prevNode
+    }*/
+
+
+    /**
+     * Inserts a new row after the cursor row and moves the cursor onto it
+     */
+    addNewRow(initialContent: string = ""): void {
+        const node = new BufferNode(initialContent)
+
+        node.prev = this.cursor
+        node.next = this.cursor!.next
+
+        if (this.cursor!.next) {
+            this.cursor!.next.prev = node
+        } else {
+            this.last = node
+        }
+        this.cursor!.next = node
+        this.cursor = node
+    }
+
+
+    /**
+     * Deletes the cursor row
+     * Cursor moves to the next row, or the previous one if the last row
+     * was deleted. Deleting the only row just empties it.
+     */
+    deleteRow(): void {
+        if (this.first === this.last) {
+            // vim clears the final line
+            const empty = new BufferNode()
+            this.first = empty
+            this.last = empty
+            this.cursor = empty
+            return
+        }
+
+        const { prev, next } = this.cursor!
+
+        if (prev) prev.next = next
+        else this.first = next!
+
+        if (next) next.prev = prev
+        else this.last = prev!
+
+        this.cursor = next ?? prev!
     }
 
 
@@ -109,6 +142,38 @@ export class DocumentBuffer {
     }
 
 
+    /**
+     * Sets the documentbuffer with the file contents
+     * @param file 
+     */
+    loadFromString(file: string) {
+        this.clearBuffer()
+        const lines = file.split("\n")
+
+        let lastNode = null
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i]
+            const node = new BufferNode(line)
+        
+            if (i == 0) {
+                this.first = node
+                this.cursor = node
+            }
+
+            if (i == lines.length - 1) {
+                this.last = node
+            }
+
+            if (lastNode) {
+                lastNode.next = node
+                node.prev = lastNode
+            }
+
+            lastNode = node
+        }
+    }
+
+
     bufferToArray(): DocumentRow[] {
         const rowArray: DocumentRow[] = []
         let curr = this.first
@@ -124,13 +189,13 @@ export class DocumentBuffer {
 
 
     bufferToString(): string {
-        let userInput = ""
+        const lines: string[] = []
         let curr = this.first
         while (curr) {
-            userInput += curr.data.toString() + "\n"
+            lines.push(curr.data.toString())
             curr = curr.next
         }
-        return userInput
+        return lines.join("\n")
     }
 
 

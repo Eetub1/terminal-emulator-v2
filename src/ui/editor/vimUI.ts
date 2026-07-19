@@ -2,6 +2,7 @@ import { FileNode } from "../../core/FileSystem"
 import { VimMode } from "../../types"
 
 import type { DocumentRow } from "../../types"
+import { PROMPT_SYMBOL } from "../../utils/symbols"
 
 export const renderDefaultVimView = (currentFile: FileNode | null = null): void => {
     // Hide terminal
@@ -62,7 +63,7 @@ export const renderEditorTextOnScreen = (fileContents: DocumentRow[]): void => {
             if (cursorIndex === rowText.length) { // if cursor was not on top of text
                 const cursorSpan = document.createElement("span")
                 cursorSpan.classList.add("cursor")
-                cursorSpan.textContent = "@"
+                cursorSpan.textContent = PROMPT_SYMBOL
                 rowElement.appendChild(cursorSpan)
             }
 
