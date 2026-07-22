@@ -10,6 +10,7 @@ import { renderDefaultVimView } from "../ui/editor/vimUI"
 import { renderEditorTextOnScreen } from "../ui/editor/vimUI"
 import { setInfoSection } from "../ui/editor/vimUI"
 import { updateEditorCommandSection } from "../ui/editor/editorTerminal"
+import { setupApp } from "../ui/setupApp"
 
 
 import { FileNode } from "./FileSystem"
@@ -33,6 +34,7 @@ export class App {
     }
 
     start(): void {
+        setupApp() // add a few eventlisteners
         renderDefaultTerminalScreen(this.fileSystem.getPath())
     }
 
