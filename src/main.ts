@@ -15,6 +15,18 @@ const vimEditor = new VimEditor(documentBuffer, editorTerminalBuffer)
 const output = new Output()
 const app = new App(fileSystem, terminalBuffer, vimEditor, output)
 
+const terminalHelpSection = document.getElementById("terminalHelpSection")
+document.getElementById("hideTerminalHelpSectionButton")?.addEventListener("click", function() {
+    localStorage.setItem("hideTerminalHelp", "true")
+    terminalHelpSection?.classList.add("hidden")
+})
+
+const editorHelpSection = document.getElementById("editorHelpSection")
+document.getElementById("hideEditorHelpSectionButton")?.addEventListener("click", function() {
+    localStorage.setItem("hideEditorHelp", "true")
+    editorHelpSection?.classList.add("hidden")
+})
+
 window.addEventListener("keydown", (event: KeyboardEvent) => {
     const key = event.key
     if (key === "Tab" || key === "ArrowDown" || key === "ArrowUp" || event.key === " ") {

@@ -4,6 +4,15 @@ import { PROMPT_SYMBOL } from "../../utils/symbols"
  * Renders a default prompt on screen
  */
 export const renderDefaultTerminalScreen = (path: string): void => {
+    // if help has been clicked off, dont show it again
+    const res = localStorage.getItem("hideTerminalHelp")
+    if (res) {
+        document.getElementById("terminalHelpSection")?.classList.add("hidden")
+    }
+
+    // remove vim help section from screen just in case
+    document.getElementById("editorHelpSection")?.classList.add("hidden")
+
     // Make sure terminal is visible
     const terminalViewContainer = document.getElementById("terminalView")!
     terminalViewContainer.style.display = "block"

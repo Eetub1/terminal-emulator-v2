@@ -5,6 +5,19 @@ import type { DocumentRow } from "../../types"
 import { PROMPT_SYMBOL } from "../../utils/symbols"
 
 export const renderDefaultVimView = (currentFile: FileNode | null = null): void => {
+
+    const res = localStorage.getItem("hideEditorHelp")
+    if (res) {
+        // if the help section has been clicked off, dont show it again
+        document.getElementById("editorHelpSection")?.classList.add("hidden")
+    } else {
+        // put vim help section on screen
+        document.getElementById("editorHelpSection")?.classList.remove("hidden")
+    }
+
+    // remove terminal help section
+    document.getElementById("terminalHelpSection")?.classList.add("hidden")
+    
     // Hide terminal
     const terminalViewContainer = document.getElementById("terminalView")!
     terminalViewContainer.style.display = "none"

@@ -7,6 +7,56 @@
     </head>
     <body>
         <div id="app">
+
+            <div id="terminalHelpSection">
+                <h3>Supported commands <button id="hideTerminalHelpSectionButton">Hide help</button></h3>
+                <dl class="command-grid">
+                    <dt>ls</dt>
+                    <dd>list directory contents</dd>
+
+                    <dt>cd "path"</dt>
+                    <dd>change directory</dd>
+
+                    <dt>echo "arguments"</dt>
+                    <dd>list own arguments</dd>
+
+                    <dt>man "command"</dt>
+                    <dd>get info about a specific command</dd>
+
+                    <dt>mkdir "directory name"</dt>
+                    <dd>create directory</dd>
+
+                    <dt>touch "filename"</dt>
+                    <dd>create file</dd>
+
+                    <dt>rm "filename"</dt>
+                    <dd>delete file</dd>
+
+                    <dt>rmdir "directory name"</dt>
+                    <dd>delete directory</dd>
+
+                    <dt>pwd</dt>
+                    <dd>print current directory</dd>
+
+                    <dt>vim "filename"</dt>
+                    <dd>open file with text editor</dd>
+                </dl>
+            </div>
+
+            <div id="editorHelpSection" class="hidden">
+                <h3>Vim help section <button id="hideEditorHelpSectionButton">Hide help</button></h3>
+                <dl class="command-grid">
+                    <dt>:q</dt>
+                    <dd>Exit vim without saving</dd>
+
+                    <dt>:w</dt>
+                    <dd>Save changes</dd>
+
+                    <dt>i</dt>
+                    <dd>Go to insert mode to modify file</dd>
+                </dl>
+            </div>
+
             <div id="terminalView">
                 <div id="history"></div>
                 <div id="terminal"><p class="prompt"></p><div class="promptInput"><span class="cursor">@</span></div>
