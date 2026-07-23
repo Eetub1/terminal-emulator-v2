@@ -159,6 +159,11 @@ export class VimEditor {
     handleCommandModePress(key: string): string {
         switch (key) {
             case "Backspace":
+                if (this.commandTextBuffer.getText().length == 1) {
+                    this.commandTextBuffer.deleteCharacter()
+                    this.mode = VimMode.Normal
+                    return ""
+                }
                 this.commandTextBuffer.deleteCharacter()
                 break
             case "Enter":
@@ -186,12 +191,18 @@ export class VimEditor {
         const pureCommand = command.slice(1).trim()
         console.log(pureCommand)
 
+        this.commandTextBuffer.clearBuffer()
+        this.mode = VimMode.Normal
+
         switch (pureCommand) {
             case "q":
                 return "exit"
             case "w":
                 this.getCurrentFile()!.setContents(this.documentBuffer.bufferToString())
                 break
+            case "wq":
+                this.handleCommand(":w")
+                return this.handleCommand(":q")
             default:
                 break
         }

@@ -52,7 +52,7 @@ button {
 
 
 
-#terminal {
+#terminal, #editorView {
     white-space: pre; /* with this, multiple consecutive characters containing a space dont collapse into one*/
 }
 
@@ -107,12 +107,8 @@ button {
     user-select: none;
 }
 
-#editorCommandSection {
-    margin-top: auto;
-    border: 1px solid white;
-}
-
 #editorSessionInfoSection {
+    margin-top: auto;
     display: flex;
     flex-direction: column;
 }

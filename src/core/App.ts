@@ -49,6 +49,8 @@ export class App {
             const result = this.vimEditor.handleEditorKeyPress(event)
             if (result === "exit") {
                 this.exitEditor()
+                // Clear the commandsection
+                updateEditorCommandSection(this.vimEditor.getCommandTextBuffer().getText(), this.vimEditor.getCommandTextBuffer().getCursorIndex())
             } else {
                 renderEditorTextOnScreen(this.vimEditor.getDocumentBuffer().bufferToArray())
                 setInfoSection(this.vimEditor.getEditorMode(), this.vimEditor.getCurrentFile())

@@ -5,6 +5,11 @@ import { PROMPT_SYMBOL } from "../../utils/symbols.js"
  * THIS IS BASICALLY THE SAME AS RENDERUSERINPUTONSCREEN IN PROMPT.TS MAYBE REFACTOR???
  */
 export const updateEditorCommandSection = (text: string, cursorIndex: number): void => {
+    if (text == "") {
+        clearEditorCommandInput()
+        return
+    }
+
     const commandSection = document.getElementById("editorCommandSection")!
     commandSection.textContent = ""
 
