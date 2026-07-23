@@ -121,8 +121,16 @@ export class VimEditor {
                 this.mode = VimMode.Normal
                 break
             case "Backspace":
-                currentRow.deleteChar()
+            {
+                const gapStartIndex = currentRow.getGapStart()
+                const contentLength = currentRow.getContentLength()
+                if (gapStartIndex <= 0 && contentLength === 0) {
+                    this.documentBuffer.deleteRow()
+                } else {
+                    currentRow.deleteChar()
+                }
                 break
+            }
             case "ArrowLeft":
                 currentRow.moveCursorLeft()
                 break
