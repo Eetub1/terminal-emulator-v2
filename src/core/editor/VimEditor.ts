@@ -9,18 +9,19 @@ export class VimEditor {
     private documentBuffer: DocumentBuffer
     private currentFile: FileNode | null
     private commandTextBuffer: TerminalBuffer // Contains the editor's terminal input
+    private saveFile: (file: FileNode, contents: string) => void
 
-    constructor(documentBuffer: DocumentBuffer, commandTextBuffer: TerminalBuffer) {
+    constructor(documentBuffer: DocumentBuffer, commandTextBuffer: TerminalBuffer, saveFile: (file: FileNode, contents: string) => void) {
         this.mode = VimMode.Normal
         this.documentBuffer = documentBuffer
         this.currentFile = null
         this.commandTextBuffer = commandTextBuffer
+        this.saveFile = saveFile
     }
 
 
     open(file: FileNode): void {
         this.setCurrentFile(file)
-        
         this.documentBuffer.loadFromString(file.contents)
     }
 
@@ -187,6 +188,11 @@ export class VimEditor {
     }
 
 
+    save(file: FileNode, contents: string): void {
+        this.saveFile(file, contents)
+    }
+
+
     handleCommand(command: string): string {
         const pureCommand = command.slice(1).trim()
         console.log(pureCommand)
@@ -198,7 +204,7 @@ export class VimEditor {
             case "q":
                 return "exit"
             case "w":
-                this.getCurrentFile()!.setContents(this.documentBuffer.bufferToString())
+                this.save(this.getCurrentFile()!, this.documentBuffer.bufferToString())
                 break
             case "wq":
                 this.handleCommand(":w")

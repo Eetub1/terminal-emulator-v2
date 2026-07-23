@@ -1,7 +1,8 @@
 import { TerminalBuffer } from "./terminal/TerminalBuffer"
 import { FileSystem, FileNode } from "./FileSystem"
-import { Output } from "../ui/terminal/Output"
 import { CommandParser } from "./CommandParser"
+
+import { Output } from "../ui/terminal/Output"
 import { renderUserInputOnScreen, renderPromptPath } from "../ui/terminal/prompt"
 
 import { touchCommand } from "../commands/touch"

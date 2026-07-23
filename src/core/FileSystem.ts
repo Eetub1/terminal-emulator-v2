@@ -285,6 +285,12 @@ export class FileSystem {
     }
 
 
+    writeFile(file: FileNode, contents: string): void {
+        file.setContents(contents)
+        this.saveFileSystemToLocalStorage()
+    }
+
+
     deleteDirectory(dirName: string): DeleteDirectoryResultObject {
         const resultObject: DeleteDirectoryResultObject = {
             wasSuccess: false,

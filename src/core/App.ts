@@ -16,21 +16,23 @@ import { setupApp } from "../ui/setupApp"
 import { FileNode } from "./FileSystem"
 
 import { AppState } from "../types"
+import { DocumentBuffer } from "./editor/DocumentBuffer"
+
+const documentBuffer = new DocumentBuffer()
+const editorTextBuffer = new TerminalBuffer()
 
 export class App {
     private appState: AppState = AppState.Terminal
     private commandHandler: CommandHandler
     private fileSystem: FileSystem
-    //private terminalBuffer: TerminalBuffer
     private vimEditor: VimEditor
-    //private output: Output
 
-    constructor(fileSystem: FileSystem, terminalBuffer: TerminalBuffer, vimEditor: VimEditor, output: Output,) {
-        this.commandHandler = new CommandHandler(terminalBuffer, fileSystem, output, (file: FileNode) => this.openEditor(file))
-        this.vimEditor = vimEditor
+    constructor(fileSystem: FileSystem, terminalBuffer: TerminalBuffer, output: Output,) {
+        this.commandHandler = new CommandHandler(terminalBuffer, fileSystem, output, 
+            (file: FileNode) => this.openEditor(file))
+        this.vimEditor = new VimEditor(documentBuffer, editorTextBuffer, 
+            (file, contents) => this.saveFile(file, contents))
         this.fileSystem = fileSystem
-        //this.terminalBuffer = terminalBuffer
-        //this.output = output
     }
 
     start(): void {
@@ -57,6 +59,11 @@ export class App {
                 updateEditorCommandSection(this.vimEditor.getCommandTextBuffer().getText(), this.vimEditor.getCommandTextBuffer().getCursorIndex())
             }
         }
+    }
+
+
+    saveFile(file: FileNode, contents: string): void {
+        this.fileSystem.writeFile(file, contents)
     }
 
 
